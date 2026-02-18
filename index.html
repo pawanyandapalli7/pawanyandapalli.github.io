@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pawan Yandapalli — Data Engineer</title>
+<meta name="description" content="Pawan Yandapalli — Data Engineer with 5+ years at Amazon and TouchWorld. AWS pipelines, CDC, healthcare data, Snowflake, Spark.">
+<meta property="og:title" content="Pawan Yandapalli — Data Engineer">
+<meta property="og:description" content="5+ years building production data platforms at Amazon and TouchWorld. AWS · Spark · Snowflake · Kafka · dbt · Airflow.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pawanyandapalli.com">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pawan Yandapalli — Data Engineer">
+<meta name="twitter:description" content="5+ years at Amazon and TouchWorld. Production data pipelines on AWS, Spark, Snowflake.">
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#080808;--bg2:#0f0f0f;
+  --border:#1c1c1c;--border2:#2a2a2a;
+  --amber:#f5a623;--amber-dim:#7a5210;
+  --teal:#00b4a6;--text:#d8d4cc;
+  --muted:#555;--white:#f0ece4;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:13px;line-height:1.6;
+  overflow-x:hidden;cursor:none;
+}
+
+.cursor{
+  position:fixed;width:8px;height:8px;
+  background:var(--amber);border-radius:50%;
+  pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:width .2s,height .2s;
+  mix-blend-mode:difference;
+}
+.cursor-ring{
+  position:fixed;width:32px;height:32px;
+  border:1px solid var(--amber);border-radius:50%;
+  pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:width .3s,height .3s,opacity .3s;opacity:.5;
+}
+
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:100;
+}
+
+.pipeline-bg{
+  position:fixed;top:0;right:0;width:420px;height:100vh;
+  pointer-events:none;z-index:0;opacity:.06;overflow:hidden;
+}
+.pipe-line{
+  position:absolute;width:1px;
+  background:linear-gradient(180deg,transparent,var(--amber),transparent);
+  animation:flowDown linear infinite;
+}
+@keyframes flowDown{
+  0%{transform:translateY(-100%);opacity:0}
+  10%{opacity:1}90%{opacity:1}
+  100%{transform:translateY(200vh);opacity:0}
+}
+
+/* Layout */
+.site-grid{
+  display:grid;grid-template-columns:276px 1fr;
+  min-height:100vh;position:relative;z-index:1;
+}
+
+/* SIDEBAR */
+.sidebar{
+  position:sticky;top:0;height:100vh;
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  padding:32px 26px;background:var(--bg);overflow:hidden;
+}
+.sidebar::before{
+  content:'';position:absolute;bottom:-60px;left:-60px;
+  width:200px;height:200px;
+  background:radial-gradient(circle,#f5a62312 0%,transparent 70%);
+  pointer-events:none;
+}
+
+.logo-mark{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:10px;letter-spacing:.3em;
+  color:var(--amber);text-transform:uppercase;
+  margin-bottom:24px;
+  display:flex;align-items:center;gap:8px;
+  text-decoration:none;transition:opacity .2s;
+}
+.logo-mark:hover{opacity:.7}
+.logo-dot{
+  width:6px;height:6px;background:var(--amber);
+  border-radius:50%;animation:pulse 2s infinite;flex-shrink:0;
+}
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.4;transform:scale(.7)}
+}
+
+/* Avatar — swap initials div for <img> when you have a photo */
+.avatar-wrap{
+  width:52px;height:52px;border-radius:50%;
+  border:1px solid var(--border2);overflow:hidden;
+  margin-bottom:14px;background:var(--border);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.avatar-initials{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem;color:var(--amber);letter-spacing:.05em;
+}
+
+.sidebar-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2.4rem;line-height:.95;
+  color:var(--white);letter-spacing:.02em;margin-bottom:8px;
+}
+.sidebar-role{
+  font-size:9px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--amber);margin-bottom:16px;
+}
+.sidebar-bio{
+  font-size:10px;color:var(--muted);
+  line-height:1.8;margin-bottom:22px;
+  border-left:2px solid var(--amber-dim);padding-left:10px;
+}
+
+.sidebar-stats{margin-bottom:20px;}
+.sidebar-stat{display:flex;align-items:baseline;gap:8px;margin-bottom:10px;}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--white);line-height:1;}
+.stat-label{font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+
+.sidebar-nav{margin-top:auto;display:flex;flex-direction:column;gap:2px;}
+.nav-link{
+  font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;padding:5px 0;
+  display:flex;align-items:center;gap:10px;transition:color .2s;
+}
+.nav-link::before{
+  content:'—';font-size:10px;color:var(--border2);
+  transition:color .2s;width:14px;flex-shrink:0;
+}
+.nav-link:hover,.nav-link.active{color:var(--amber);}
+.nav-link:hover::before,.nav-link.active::before{color:var(--amber);}
+
+.sidebar-links{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap;}
+.ext-link{
+  font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;padding:4px 9px;
+  border:1px solid var(--border2);transition:border-color .2s,color .2s;
+}
+.ext-link:hover{border-color:var(--amber);color:var(--amber);}
+
+/* MAIN */
+.main{padding:0;position:relative;}
+.section{padding:60px 56px;border-bottom:1px solid var(--border);}
+.section-label{
+  font-size:9px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:28px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-label::after{
+  content:'';flex:1;max-width:60px;height:1px;background:var(--amber-dim);
+}
+
+/* HERO */
+.hero{padding:68px 56px 52px;border-bottom:1px solid var(--border);}
+.hero-eyebrow{
+  font-size:9px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
+}
+.hero-eyebrow span{display:inline-block;width:20px;height:1px;background:var(--amber);}
+.hero-headline{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(2.1rem,3.2vw,3.4rem);
+  line-height:1.15;color:var(--white);
+  margin-bottom:22px;max-width:500px;
+}
+.hero-headline em{font-style:italic;color:var(--amber);}
+.hero-body{font-size:11px;color:#777;line-height:1.9;max-width:460px;margin-bottom:32px;}
+
+.hero-metrics{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);max-width:460px;
+}
+.metric-cell{background:var(--bg);padding:16px 18px;transition:background .2s;}
+.metric-cell:hover{background:var(--bg2);}
+.metric-value{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;color:var(--white);line-height:1;margin-bottom:4px;}
+.metric-key{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+
+/* EXPERIENCE TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.exp-card{
+  border:1px solid var(--border);
+  margin-bottom:16px;position:relative;overflow:hidden;
+  transition:border-color .25s;
+}
+.exp-card:hover{border-color:var(--border2);}
+.exp-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--amber),var(--teal));
+  transform:scaleX(0);transform-origin:left;transition:transform .35s ease;
+}
+.exp-card:hover::before{transform:scaleX(1);}
+.exp-inner{padding:26px 30px;}
+.exp-top{
+  display:flex;justify-content:space-between;
+  align-items:flex-start;margin-bottom:12px;gap:16px;
+}
+.exp-company{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.8rem;color:var(--white);line-height:1;letter-spacing:.03em;
+}
+.exp-company.amazon{color:var(--amber);}
+.exp-meta{text-align:right;flex-shrink:0;}
+.exp-period{font-size:9px;color:var(--muted);letter-spacing:.08em;margin-bottom:4px;}
+.exp-location{font-size:9px;color:var(--muted);letter-spacing:.05em;}
+.exp-title{
+  font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:14px;
+}
+.exp-bullets{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+.exp-bullet{
+  display:flex;gap:10px;align-items:flex-start;
+  font-size:11px;color:#5a5a5a;line-height:1.7;
+}
+.bullet-dot{
+  color:var(--amber-dim);font-size:8px;
+  margin-top:4px;flex-shrink:0;
+}
+.exp-card:hover .bullet-dot{color:var(--amber);}
+.exp-stack{display:flex;flex-wrap:wrap;gap:5px;padding-top:14px;border-top:1px solid var(--border);}
+.stack-tag{
+  font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+  padding:2px 7px;border:1px solid var(--border2);color:var(--muted);
+  transition:border-color .2s,color .2s;
+}
+.exp-card:hover .stack-tag{border-color:var(--amber-dim);color:#777;}
+
+/* PROJECT CARDS */
+.project-card{
+  border:1px solid var(--border);margin-bottom:16px;
+  transition:border-color .25s;position:relative;overflow:hidden;
+}
+.project-card:hover{border-color:var(--border2);}
+.project-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--amber),var(--teal));
+  transform:scaleX(0);transform-origin:left;transition:transform .35s ease;
+}
+.project-card:hover::before{transform:scaleX(1);}
+.project-inner{padding:24px 28px;}
+.project-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.project-index{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--border2);line-height:1;}
+.project-stack{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;}
+.project-title{font-family:'Instrument Serif',serif;font-size:1.35rem;color:var(--white);margin-bottom:5px;line-height:1.2;}
+.project-problem{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:8px;}
+.project-desc{font-size:11px;color:#5a5a5a;line-height:1.9;margin-bottom:16px;}
+.project-impact{
+  background:#0c0c0c;border:1px solid var(--border);
+  padding:12px 16px;margin-bottom:14px;
+  display:flex;gap:24px;flex-wrap:wrap;
+}
+.impact-val{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--teal);line-height:1;}
+.impact-lbl{font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;}
+.project-link{
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  display:inline-flex;align-items:center;gap:6px;transition:color .2s;
+}
+.project-link:hover{color:var(--amber);}
+.project-link::after{content:'→';transition:transform .2s;}
+.project-link:hover::after{transform:translateX(4px);}
+
+/* Also-in-repo strip */
+.modules-strip{
+  border:1px solid var(--border);background:var(--bg2);
+  padding:16px 22px;margin-top:4px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.strip-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);flex-shrink:0;}
+.strip-items{display:flex;gap:8px;flex-wrap:wrap;flex:1;}
+.strip-item{
+  font-size:10px;color:#5f5f5f;padding:4px 11px;
+  border:1px solid var(--border2);text-decoration:none;
+  transition:border-color .2s,color .2s;
+  display:flex;align-items:center;gap:6px;
+}
+.strip-item:hover{border-color:var(--amber-dim);color:#888;}
+.strip-item-num{font-family:'Bebas Neue',sans-serif;font-size:.85rem;color:var(--border2);}
+
+/* PLATFORM GRID */
+.platform-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;background:var(--border);border:1px solid var(--border);
+}
+.platform-card{
+  background:var(--bg);padding:24px 24px 16px;
+  display:flex;flex-direction:column;transition:background .2s;
+}
+.platform-card:hover{background:#0b0b0b;}
+.platform-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.platform-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--border2);line-height:1;}
+.platform-badge{font-size:8px;letter-spacing:.18em;text-transform:uppercase;padding:3px 8px;border:1px solid;}
+.platform-badge.quality     {border-color:#4a9eff44;color:#4a9eff;background:#4a9eff08;}
+.platform-badge.governance  {border-color:#ff6b6b44;color:#ff6b6b;background:#ff6b6b08;}
+.platform-badge.performance {border-color:#f5a62344;color:var(--amber);background:#f5a62308;}
+.platform-badge.observability{border-color:#00b4a644;color:var(--teal);background:#00b4a608;}
+.platform-title{font-family:'Instrument Serif',serif;font-size:1.1rem;color:var(--white);line-height:1.2;margin-bottom:8px;}
+.platform-desc{font-size:10px;color:#4a4a4a;line-height:1.8;margin-bottom:12px;}
+.platform-highlights{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;flex:1;}
+.platform-highlight{display:flex;gap:8px;align-items:flex-start;font-size:10px;color:#4a4a4a;line-height:1.5;}
+.ph-icon{color:var(--border2);font-size:8px;margin-top:3px;flex-shrink:0;transition:color .2s;}
+.platform-card:hover .ph-icon{color:var(--amber-dim);}
+.platform-highlight code{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#777;background:var(--border);padding:1px 4px;}
+.platform-footer{display:flex;flex-wrap:wrap;gap:5px;align-items:center;padding-top:12px;border-top:1px solid var(--border);}
+.platform-tag{font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;background:var(--border);color:var(--muted);}
+.platform-link{margin-left:auto;font-size:10px;letter-spacing:.08em;color:var(--muted);text-decoration:none;transition:color .2s;white-space:nowrap;}
+.platform-link:hover{color:var(--amber);}
+
+/* SKILLS */
+.skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
+.skill-group{background:var(--bg);padding:22px 24px;transition:background .2s;}
+.skill-group:hover{background:var(--bg2);}
+.skill-group-title{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:14px;}
+.skill-items{display:flex;flex-direction:column;gap:9px;}
+.skill-row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.skill-name{font-size:10px;color:#777;white-space:nowrap;}
+.skill-bar{flex:1;height:1px;background:var(--border2);position:relative;overflow:hidden;}
+.skill-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--amber),var(--teal));width:0%;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+.skill-level{font-size:9px;color:var(--muted);letter-spacing:.05em;white-space:nowrap;}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.contact-card{
+  border:1px solid var(--border);padding:20px 24px;
+  text-decoration:none;display:block;
+  transition:border-color .2s,background .2s;
+  position:relative;overflow:hidden;
+}
+.contact-card::after{content:'↗';position:absolute;top:14px;right:16px;font-size:13px;color:var(--border2);transition:color .2s,transform .2s;}
+.contact-card:hover{border-color:var(--amber);background:#0c0c0c;}
+.contact-card:hover::after{color:var(--amber);transform:translate(2px,-2px);}
+.contact-platform{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:5px;}
+.contact-handle{font-family:'Instrument Serif',serif;font-size:1rem;color:var(--white);}
+
+/* FOOTER */
+.footer-strip{padding:18px 56px;display:flex;justify-content:space-between;align-items:center;}
+.footer-copy{font-size:10px;color:var(--muted);letter-spacing:.05em;}
+.footer-ticker{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px;}
+.ticker-dot{width:5px;height:5px;background:var(--teal);border-radius:50%;animation:pulse 2s infinite;}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  body{cursor:auto;}
+  .cursor,.cursor-ring{display:none;}
+  .site-grid{grid-template-columns:1fr;}
+  .sidebar{position:relative;height:auto;padding:28px 20px;}
+  .hero,.section{padding:36px 20px;}
+  .hero-metrics{max-width:100%;}
+  .contact-grid,.skills-grid,.platform-grid{grid-template-columns:1fr;}
+  .footer-strip{padding:16px 20px;flex-direction:column;gap:8px;text-align:center;}
+  .pipeline-bg{display:none;}
+  .modules-strip{flex-direction:column;align-items:flex-start;}
+  .exp-top{flex-direction:column;gap:4px;}
+  .exp-meta{text-align:left;}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="pipeline-bg" id="pipelineBg"></div>
+
+<div class="site-grid">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <a href="#contact" class="logo-mark">
+      <div class="logo-dot"></div>
+      Open to opportunities
+    </a>
+
+    <!-- Replace inner div with <img src="your-photo.jpg" alt="Pawan"> when ready -->
+    <div class="avatar-wrap">
+      <div class="avatar-initials">PY</div>
+    </div>
+
+    <div class="sidebar-name">Pawan<br>Yanda<br>palli</div>
+    <div class="sidebar-role">Data Engineer</div>
+
+    <p class="sidebar-bio">
+      5+ years building data platforms that power fraud detection, clinical research, and ML at scale — at Amazon and beyond.
+    </p>
+
+    <div class="sidebar-stats">
+      <div class="sidebar-stat">
+        <div class="stat-num">5+</div>
+        <div class="stat-label">Years experience</div>
+      </div>
+      <div class="sidebar-stat">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Companies</div>
+      </div>
+      <div class="sidebar-stat">
+        <div class="stat-num">10</div>
+        <div class="stat-label">Portfolio modules</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#experience" class="nav-link" data-section="experience">Experience</a>
+      <a href="#work"       class="nav-link" data-section="work">Projects</a>
+      <a href="#platform"   class="nav-link" data-section="platform">Platform</a>
+      <a href="#skills"     class="nav-link" data-section="skills">Skills</a>
+      <a href="#contact"    class="nav-link" data-section="contact">Contact</a>
+    </nav>
+
+    <div class="sidebar-links">
+      <a href="https://github.com/pawanyandapalli7" class="ext-link" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/pawanyandapalli/" class="ext-link" target="_blank">LinkedIn</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="hero-eyebrow"><span></span> AWS · Snowflake · Spark · Kafka · dbt · Airflow</div>
+      <h1 class="hero-headline">
+        Raw data in.<br>
+        <em>Reliable decisions</em><br>out — at any scale.
+      </h1>
+      <p class="hero-body">
+        Data Engineer with 5+ years designing cloud-native data platforms at Amazon and TouchWorld. I build the pipelines that power ML models, BI dashboards, and regulatory compliance — at any scale, in any domain.
+      </p>
+      <div class="hero-metrics">
+        <div class="metric-cell">
+          <div class="metric-value">Amazon</div>
+          <div class="metric-key">3 years at<br>high-volume scale</div>
+        </div>
+        <div class="metric-cell">
+          <div class="metric-value">HIPAA</div>
+          <div class="metric-key">Healthcare data<br>governance built</div>
+        </div>
+        <div class="metric-cell">
+          <div class="metric-value">ML-Ready</div>
+          <div class="metric-key">Feature stores for<br>fraud & risk models</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section class="section" id="experience">
+      <div class="section-label">Work experience</div>
+
+      <!-- TouchWorld -->
+      <div class="exp-card">
+        <div class="exp-inner">
+          <div class="exp-top">
+            <div>
+              <div class="exp-company">TouchWorld</div>
+              <div class="exp-title">Data Engineer · Farmington, MI</div>
+            </div>
+            <div class="exp-meta">
+              <div class="exp-period">Feb 2025 — Present</div>
+              <div class="exp-location">Current role</div>
+            </div>
+          </div>
+          <div class="exp-bullets">
+            <div class="exp-bullet"><span class="bullet-dot">◆</span><span>Designed AWS Glue + PySpark pipelines processing large-scale insurance data — policies, claims, underwriting, and customer records — for downstream analytics and fraud detection.</span></div>
+            <div class="exp-bullet"><span class="bullet-dot">◆</span><span>Implemented CDC and incremental ingestion for historical and late-arriving claims, enabling timely underwriting insights and reducing stale data incidents.</span></div>
+            <div class="exp-bullet"><span class="bullet-dot">◆</span><span>Built ML-ready feature stores in Snowflake and Redshift — curated datasets powering fraud detection, risk scoring, and customer churn models for data science teams.</span></div>
+            <div class="exp-bullet"><span class="bullet-dot">◆</span><span>Strengthened data governance with IAM, KMS, Secrets Manager, and Lake Formation to meet HIPAA and GDPR standards across all data assets.</span></div>
+            <div class="exp-bullet"><span class="bullet-dot">◆</span><span>Containerized ETL jobs with Docker + EKS and automated all infrastructure with Terraform — zero manual deployments to production.</span></div>
+          </div>
+          <div class="exp-stack">
+            <span class="stack-tag">Python</span><span class="stack-tag">PySpark</span>
+            <span class="stack-tag">AWS Glue</span><span class="stack-tag">S3</span>
+            <span class="stack-tag">Redshift</span><span class="stack-tag">Snowflake</span>
+            <span class="stack-tag">Airflow</span><span class="stack-tag">Lambda</span>
+            <span class="stack-tag">Lake Formation</span><span class="stack-tag">Docker</span>
+            <span class="stack-tag">Terraform</span><span class="stack-tag">EKS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Amazon -->
+      <div class="exp-card">
+        <div class="exp-inner">
+          <div class="exp-top">
+            <div>
+              <div class="exp-company">Amazon</div>
+              <div class="exp-title">Data Engineer · Hyderabad, India</div>
+            </div>
+            <div class="exp-meta">
+              <div class="exp-period">Sep 2020 — Jul 2023</div>
+              <div class="exp-location">3 years</div>
+            </div>
+          </div>
+          <div class="exp-bullets">
+            <div class="exp-bullet"><span class="bullet-dot">◆</span><span>Designed and deployed AWS infrastructure (Lambda, Step Functions, DynamoDB, Redshift) supporting high-volume applications at Amazon scale — reliability and performance at millions of transactions/day.</span></div>
+            <div class="exp-bullet"><span class="bullet-dot">◆</span><span>Built and optimized ETL pipelines and Redshift data models integrating diverse transactional datasets, enabling accurate, timely analytics for cross-functional teams.</span></div>
+            <div class="exp-bullet"><span class="bullet-dot">◆</span><span>Operated large-scale Spark/EMR jobs and fine-tuned SQL queries for high-performance data processing across big data workloads.</span></div>
+            <div class="exp-bullet"><span class="bullet-dot">◆</span><span>Automated data ingestion with Python and REST APIs, eliminating manual dependencies and enabling self-service data access for analysts.</span></div>
+            <div class="exp-bullet"><span class="bullet-dot">◆</span><span>Contributed to CI/CD with Jenkins and Terraform; orchestrated microservices on Kubernetes (EKS) to improve deployment cycles and scalability.</span></div>
+          </div>
+          <div class="exp-stack">
+            <span class="stack-tag">Python</span><span class="stack-tag">SQL</span>
+            <span class="stack-tag">Spark</span><span class="stack-tag">EMR</span>
+            <span class="stack-tag">Redshift</span><span class="stack-tag">Lambda</span>
+            <span class="stack-tag">Step Functions</span><span class="stack-tag">DynamoDB</span>
+            <span class="stack-tag">Jenkins</span><span class="stack-tag">Terraform</span>
+            <span class="stack-tag">Kubernetes</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GSPANN -->
+      <div class="exp-card">
+        <div class="exp-inner">
+          <div class="exp-top">
+            <div>
+              <div class="exp-company">GSPANN</div>
+              <div class="exp-title">Data Analyst · Hyderabad, India</div>
+            </div>
+            <div class="exp-meta">
+              <div class="exp-period">Aug 2019 — Sep 2020</div>
+              <div class="exp-location">1 year</div>
+            </div>
+          </div>
+          <div class="exp-bullets">
+            <div class="exp-bullet"><span class="bullet-dot">◆</span><span>Built data pipelines consolidating sales, customer, and inventory data from multiple retail systems, improving accessibility for reporting and analytics.</span></div>
+            <div class="exp-bullet"><span class="bullet-dot">◆</span><span>Migrated ETL workflows to AWS EMR and Aurora Postgres, increasing batch processing reliability and throughput.</span></div>
+            <div class="exp-bullet"><span class="bullet-dot">◆</span><span>Automated ingestion pipelines (API, ODBC, file-based) to streamline POS data integration and reduce manual processing effort.</span></div>
+          </div>
+          <div class="exp-stack">
+            <span class="stack-tag">SQL</span><span class="stack-tag">Python</span>
+            <span class="stack-tag">AWS EMR</span><span class="stack-tag">Aurora Postgres</span>
+            <span class="stack-tag">Redshift</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PORTFOLIO PROJECTS -->
+    <section class="section" id="work">
+      <div class="section-label">Portfolio projects</div>
+
+      <!-- 01 -->
+      <div class="project-card">
+        <div class="project-inner">
+          <div class="project-top">
+            <div class="project-index">01</div>
+            <div class="project-stack">
+              <span class="stack-tag">AWS Glue</span><span class="stack-tag">PySpark</span>
+              <span class="stack-tag">Snowflake</span><span class="stack-tag">Airflow</span>
+            </div>
+          </div>
+          <div class="project-problem">Problem — Insurer drowning in unprocessed, low-quality claims</div>
+          <h2 class="project-title">Healthcare Claims Data Platform</h2>
+          <p class="project-desc">End-to-end platform ingesting, validating, and curating insurance claims. Batch and CDC ingestion with HIPAA-compliant handling, late-arriving data logic, and automated quality gates — producing ML-ready feature stores and analytics datasets.</p>
+          <div class="project-impact">
+            <div class="impact-item"><div class="impact-val">HIPAA</div><div class="impact-lbl">Compliant</div></div>
+            <div class="impact-item"><div class="impact-val">Batch+CDC</div><div class="impact-lbl">Dual ingestion</div></div>
+            <div class="impact-item"><div class="impact-val">ML-Ready</div><div class="impact-lbl">Feature store output</div></div>
+          </div>
+          <a href="https://github.com/pawanyandapalli7/data-engineer-portfolio/tree/main/05_end_to_end_projects" class="project-link" target="_blank">View on GitHub</a>
+        </div>
+      </div>
+
+      <!-- 02 -->
+      <div class="project-card">
+        <div class="project-inner">
+          <div class="project-top">
+            <div class="project-index">02</div>
+            <div class="project-stack">
+              <span class="stack-tag">PostgreSQL</span><span class="stack-tag">AWS DMS</span>
+              <span class="stack-tag">S3</span><span class="stack-tag">Snowflake</span>
+            </div>
+          </div>
+          <div class="project-problem">Problem — Nightly full-loads missing real-time transactional changes</div>
+          <h2 class="project-title">Change Data Capture Pipeline</h2>
+          <p class="project-desc">CDC pipeline from PostgreSQL to Snowflake via AWS DMS. Full idempotency, deduplication, schema evolution, and historical preservation — replacing expensive full-loads with sub-minute incremental ingestion and zero data loss.</p>
+          <div class="project-impact">
+            <div class="impact-item"><div class="impact-val">&lt;60s</div><div class="impact-lbl">Change latency</div></div>
+            <div class="impact-item"><div class="impact-val">100%</div><div class="impact-lbl">Idempotent</div></div>
+            <div class="impact-item"><div class="impact-val">Zero</div><div class="impact-lbl">Data loss</div></div>
+          </div>
+          <a href="https://github.com/pawanyandapalli7/data-engineer-portfolio/tree/main/05_end_to_end_projects/cdc_pipeline" class="project-link" target="_blank">View on GitHub</a>
+        </div>
+      </div>
+
+      <!-- 03 -->
+      <div class="project-card">
+        <div class="project-inner">
+          <div class="project-top">
+            <div class="project-index">03</div>
+            <div class="project-stack">
+              <span class="stack-tag">EventBridge</span><span class="stack-tag">Lambda</span>
+              <span class="stack-tag">Glue</span><span class="stack-tag">S3</span>
+            </div>
+          </div>
+          <div class="project-problem">Problem — Batch jobs creating hours-long analytics delays</div>
+          <h2 class="project-title">Event-Driven Processing Pipeline</h2>
+          <p class="project-desc">Near-real-time pipeline triggered on S3 uploads via EventBridge. Lambda and Glue handle automated transformations with zero idle compute — cutting end-to-end latency from hours to under 2 minutes on a fully serverless architecture.</p>
+          <div class="project-impact">
+            <div class="impact-item"><div class="impact-val">&lt;2min</div><div class="impact-lbl">End-to-end</div></div>
+            <div class="impact-item"><div class="impact-val">$0</div><div class="impact-lbl">Idle compute</div></div>
+            <div class="impact-item"><div class="impact-val">Serverless</div><div class="impact-lbl">Architecture</div></div>
+          </div>
+          <a href="https://github.com/pawanyandapalli7/data-engineer-portfolio/tree/main/04_cloud_aws" class="project-link" target="_blank">View on GitHub</a>
+        </div>
+      </div>
+
+      <!-- 04 -->
+      <div class="project-card">
+        <div class="project-inner">
+          <div class="project-top">
+            <div class="project-index">04</div>
+            <div class="project-stack">
+              <span class="stack-tag">AWS Glue</span><span class="stack-tag">Lambda</span>
+              <span class="stack-tag">IAM</span><span class="stack-tag">Lake Formation</span>
+            </div>
+          </div>
+          <div class="project-problem">Problem — Ad-hoc AWS scripts with no reusability or governance</div>
+          <h2 class="project-title">Cloud-Native AWS Data Platform</h2>
+          <p class="project-desc">Library of production-ready Glue jobs, Lambda functions, and architecture patterns with IAM least-privilege policies and Lake Formation governance. Annotated architecture diagrams for batch and event-driven designs — built for reuse across projects.</p>
+          <div class="project-impact">
+            <div class="impact-item"><div class="impact-val">IaC</div><div class="impact-lbl">All infra</div></div>
+            <div class="impact-item"><div class="impact-val">Governed</div><div class="impact-lbl">Lake Formation</div></div>
+            <div class="impact-item"><div class="impact-val">Zero</div><div class="impact-lbl">Manual deploys</div></div>
+          </div>
+          <a href="https://github.com/pawanyandapalli7/data-engineer-portfolio/tree/main/04_cloud_aws" class="project-link" target="_blank">View on GitHub</a>
+        </div>
+      </div>
+
+      <!-- 05 -->
+      <div class="project-card">
+        <div class="project-inner">
+          <div class="project-top">
+            <div class="project-index">05</div>
+            <div class="project-stack">
+              <span class="stack-tag">PySpark</span><span class="stack-tag">Python</span>
+              <span class="stack-tag">SQL</span><span class="stack-tag">pytest</span>
+            </div>
+          </div>
+          <div class="project-problem">Problem — One-off Spark jobs with no tests or reuse path</div>
+          <h2 class="project-title">Spark & Python Utility Library</h2>
+          <p class="project-desc">Reusable PySpark transformation modules and Python utilities with unit tests. Covers window functions, advanced aggregations, partitioning strategies, and common ETL patterns — designed as plug-in components for any pipeline.</p>
+          <div class="project-impact">
+            <div class="impact-item"><div class="impact-val">Tested</div><div class="impact-lbl">Unit coverage</div></div>
+            <div class="impact-item"><div class="impact-val">Modular</div><div class="impact-lbl">Plug-in design</div></div>
+            <div class="impact-item"><div class="impact-val">SQL+Py</div><div class="impact-lbl">Dual language</div></div>
+          </div>
+          <a href="https://github.com/pawanyandapalli7/data-engineer-portfolio/tree/main/02_python" class="project-link" target="_blank">View on GitHub</a>
+        </div>
+      </div>
+
+      <!-- 06 -->
+      <div class="project-card">
+        <div class="project-inner">
+          <div class="project-top">
+            <div class="project-index">06</div>
+            <div class="project-stack">
+              <span class="stack-tag">Terraform</span><span class="stack-tag">Docker</span>
+              <span class="stack-tag">Kubernetes</span><span class="stack-tag">Jenkins</span>
+            </div>
+          </div>
+          <div class="project-problem">Problem — "Works on my machine" kills production reliability</div>
+          <h2 class="project-title">DevOps & Infrastructure as Code</h2>
+          <p class="project-desc">Complete DevOps layer: Terraform modules for S3, Glue, and IAM; Dockerized PySpark for local dev parity; Jenkins + GitHub Actions CI/CD on every merge; Kubernetes (EKS) orchestration. Production never gets a surprise.</p>
+          <div class="project-impact">
+            <div class="impact-item"><div class="impact-val">IaC</div><div class="impact-lbl">Terraform</div></div>
+            <div class="impact-item"><div class="impact-val">CI/CD</div><div class="impact-lbl">Jenkins + GHA</div></div>
+            <div class="impact-item"><div class="impact-val">EKS</div><div class="impact-lbl">Orchestrated</div></div>
+          </div>
+          <a href="https://github.com/pawanyandapalli7/data-engineer-portfolio/tree/main/06_devops" class="project-link" target="_blank">View on GitHub</a>
+        </div>
+      </div>
+
+      <div class="modules-strip">
+        <span class="strip-label">Also in repo →</span>
+        <div class="strip-items">
+          <a href="https://github.com/pawanyandapalli7/data-engineer-portfolio/tree/main/01_sql/advanced_analytics" class="strip-item" target="_blank">
+            <span class="strip-item-num">01</span> Advanced SQL Analytics
+          </a>
+          <a href="https://github.com/pawanyandapalli7/data-engineer-portfolio/tree/main/03_spark_pyspark" class="strip-item" target="_blank">
+            <span class="strip-item-num">03</span> Spark / PySpark Patterns
+          </a>
+          <a href="https://github.com/pawanyandapalli7/data-engineer-portfolio/blob/main/aws_to_azure_mapping.md" class="strip-item" target="_blank">
+            <span class="strip-item-num">↗</span> AWS → Azure Mapping
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLATFORM CAPABILITIES -->
+    <section class="section" id="platform">
+      <div class="section-label">Platform capabilities</div>
+      <p style="font-size:11px;color:var(--muted);line-height:1.8;max-width:480px;margin-bottom:28px;">
+        The modules that separate a junior builder from a senior platform engineer — quality, governance, performance, and observability as first-class concerns.
+      </p>
+      <div class="platform-grid">
+
+        <div class="platform-card">
+          <div class="platform-card-header">
+            <div class="platform-num">07</div>
+            <div class="platform-badge quality">Data Quality</div>
+          </div>
+          <h3 class="platform-title">Data Quality Framework</h3>
+          <p class="platform-desc">Schema-agnostic validation enforcing null checks, referential integrity, accepted values, and drift detection — versioned code, not manual checks.</p>
+          <div class="platform-highlights">
+            <div class="platform-highlight"><span class="ph-icon">◈</span><span>Accepted value validation via <code>accepted_values.sql</code></span></div>
+            <div class="platform-highlight"><span class="ph-icon">◈</span><span>Schema drift alerting before data reaches consumers</span></div>
+            <div class="platform-highlight"><span class="ph-icon">◈</span><span>Pluggable across Glue, Spark, and dbt pipelines</span></div>
+          </div>
+          <div class="platform-footer">
+            <span class="platform-tag">Great Expectations</span><span class="platform-tag">Python</span><span class="platform-tag">SQL</span>
+            <a href="https://github.com/pawanyandapalli7/data-engineer-portfolio/tree/main/07_data_quality_framework" class="platform-link" target="_blank">View module →</a>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-card-header">
+            <div class="platform-num">08</div>
+            <div class="platform-badge governance">Governance</div>
+          </div>
+          <h3 class="platform-title">Healthcare Data Governance</h3>
+          <p class="platform-desc">HIPAA-compliant layer with dynamic masking, row-level access control, PHI classification, and audit trails — built from real healthcare platform work.</p>
+          <div class="platform-highlights">
+            <div class="platform-highlight"><span class="ph-icon">◈</span><span>Dynamic column masking for SSN, DOB, diagnosis codes</span></div>
+            <div class="platform-highlight"><span class="ph-icon">◈</span><span>Role-based access via Snowflake + Lake Formation</span></div>
+            <div class="platform-highlight"><span class="ph-icon">◈</span><span>PHI lineage tracking for HIPAA audit readiness</span></div>
+          </div>
+          <div class="platform-footer">
+            <span class="platform-tag">Snowflake</span><span class="platform-tag">Lake Formation</span><span class="platform-tag">HIPAA</span>
+            <a href="https://github.com/pawanyandapalli7/data-engineer-portfolio/tree/main/08_healthcare_data_governance" class="platform-link" target="_blank">View module →</a>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-card-header">
+            <div class="platform-num">09</div>
+            <div class="platform-badge performance">Performance</div>
+          </div>
+          <h3 class="platform-title">Snowflake Query Optimization</h3>
+          <p class="platform-desc">Query optimization patterns and warehouse tuning at scale — clustering keys, materialized views, result caching, and right-sizing with cost analysis.</p>
+          <div class="platform-highlights">
+            <div class="platform-highlight"><span class="ph-icon">◈</span><span>Clustering key selection for partition pruning</span></div>
+            <div class="platform-highlight"><span class="ph-icon">◈</span><span>Query profiling and bottleneck identification</span></div>
+            <div class="platform-highlight"><span class="ph-icon">◈</span><span>Cost-per-query analysis and auto-suspend tuning</span></div>
+          </div>
+          <div class="platform-footer">
+            <span class="platform-tag">Snowflake</span><span class="platform-tag">SQL</span><span class="platform-tag">Performance</span>
+            <a href="https://github.com/pawanyandapalli7/data-engineer-portfolio/tree/main/09_snowflake_optimization" class="platform-link" target="_blank">View module →</a>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-card-header">
+            <div class="platform-num">10</div>
+            <div class="platform-badge observability">Observability</div>
+          </div>
+          <h3 class="platform-title">Pipeline Monitoring & SLA</h3>
+          <p class="platform-desc">Production observability with SLA tracking, severity-tiered alerting, and runbook docs — because a pipeline without monitoring is a future incident.</p>
+          <div class="platform-highlights">
+            <div class="platform-highlight"><span class="ph-icon">◈</span><span>SLA breach alerting via CloudWatch & SNS</span></div>
+            <div class="platform-highlight"><span class="ph-icon">◈</span><span>Dead-letter queue handling for failed records</span></div>
+            <div class="platform-highlight"><span class="ph-icon">◈</span><span>Severity tiers and escalation paths documented</span></div>
+          </div>
+          <div class="platform-footer">
+            <span class="platform-tag">CloudWatch</span><span class="platform-tag">SNS</span><span class="platform-tag">Airflow</span>
+            <a href="https://github.com/pawanyandapalli7/data-engineer-portfolio/tree/main/10_pipeline_monitoring_sla" class="platform-link" target="_blank">View module →</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section class="section" id="skills">
+      <div class="section-label">Capabilities</div>
+      <div class="skills-grid">
+        <div class="skill-group">
+          <div class="skill-group-title">Cloud & Infrastructure</div>
+          <div class="skill-items">
+            <div class="skill-row"><span class="skill-name">AWS (Glue, EMR, Redshift, Lambda)</span><div class="skill-bar"><div class="skill-fill" data-width="96"></div></div><span class="skill-level">Expert</span></div>
+            <div class="skill-row"><span class="skill-name">Snowflake</span><div class="skill-bar"><div class="skill-fill" data-width="90"></div></div><span class="skill-level">Expert</span></div>
+            <div class="skill-row"><span class="skill-name">Terraform + IaC</span><div class="skill-bar"><div class="skill-fill" data-width="80"></div></div><span class="skill-level">Proficient</span></div>
+            <div class="skill-row"><span class="skill-name">Docker / Kubernetes (EKS)</span><div class="skill-bar"><div class="skill-fill" data-width="78"></div></div><span class="skill-level">Proficient</span></div>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Processing & Orchestration</div>
+          <div class="skill-items">
+            <div class="skill-row"><span class="skill-name">Apache Spark / PySpark</span><div class="skill-bar"><div class="skill-fill" data-width="93"></div></div><span class="skill-level">Expert</span></div>
+            <div class="skill-row"><span class="skill-name">Apache Airflow</span><div class="skill-bar"><div class="skill-fill" data-width="87"></div></div><span class="skill-level">Expert</span></div>
+            <div class="skill-row"><span class="skill-name">CDC (DMS, Debezium)</span><div class="skill-bar"><div class="skill-fill" data-width="88"></div></div><span class="skill-level">Expert</span></div>
+            <div class="skill-row"><span class="skill-name">Kafka / Databricks</span><div class="skill-bar"><div class="skill-fill" data-width="72"></div></div><span class="skill-level">Proficient</span></div>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Languages & Querying</div>
+          <div class="skill-items">
+            <div class="skill-row"><span class="skill-name">Python</span><div class="skill-bar"><div class="skill-fill" data-width="95"></div></div><span class="skill-level">Expert</span></div>
+            <div class="skill-row"><span class="skill-name">SQL (CTEs, Window Fns)</span><div class="skill-bar"><div class="skill-fill" data-width="94"></div></div><span class="skill-level">Expert</span></div>
+            <div class="skill-row"><span class="skill-name">dbt</span><div class="skill-bar"><div class="skill-fill" data-width="80"></div></div><span class="skill-level">Proficient</span></div>
+            <div class="skill-row"><span class="skill-name">Scala (familiar)</span><div class="skill-bar"><div class="skill-fill" data-width="50"></div></div><span class="skill-level">Familiar</span></div>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Governance & Analytics</div>
+          <div class="skill-items">
+            <div class="skill-row"><span class="skill-name">HIPAA / GDPR</span><div class="skill-bar"><div class="skill-fill" data-width="82"></div></div><span class="skill-level">Proficient</span></div>
+            <div class="skill-row"><span class="skill-name">Lake Formation / IAM</span><div class="skill-bar"><div class="skill-fill" data-width="85"></div></div><span class="skill-level">Proficient</span></div>
+            <div class="skill-row"><span class="skill-name">Power BI / Tableau / QuickSight</span><div class="skill-bar"><div class="skill-fill" data-width="75"></div></div><span class="skill-level">Proficient</span></div>
+            <div class="skill-row"><span class="skill-name">SageMaker (exposure)</span><div class="skill-bar"><div class="skill-fill" data-width="45"></div></div><span class="skill-level">Exposure</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section class="section" id="education">
+      <div class="section-label">Education</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);">
+
+        <div style="background:var(--bg);padding:24px 28px;transition:background .2s;" onmouseenter="this.style.background='var(--bg2)'" onmouseleave="this.style.background='var(--bg)'">
+          <div style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:10px;">Master of Science</div>
+          <div style="font-family:'Instrument Serif',serif;font-size:1.15rem;color:var(--white);margin-bottom:6px;line-height:1.3;">Computer Science</div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">University of the Pacific · Stockton, CA</div>
+          <div style="font-size:9px;color:var(--border2);letter-spacing:.1em;text-transform:uppercase;">December 2024</div>
+        </div>
+
+        <div style="background:var(--bg);padding:24px 28px;transition:background .2s;" onmouseenter="this.style.background='var(--bg2)'" onmouseleave="this.style.background='var(--bg)'">
+          <div style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:10px;">Bachelor of Science</div>
+          <div style="font-family:'Instrument Serif',serif;font-size:1.15rem;color:var(--white);margin-bottom:6px;line-height:1.3;">Electronics & Communication Engineering</div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Vishnu Institute of Technology · Andhra Pradesh, India</div>
+          <div style="font-size:9px;color:var(--border2);letter-spacing:.1em;text-transform:uppercase;">May 2019</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section" id="contact">
+      <div class="section-label">Get in touch</div>
+      <div class="contact-grid">
+        <!-- Real email from resume -->
+        <a href="mailto:Pawanyandapalli9@gmail.com" class="contact-card">
+          <div class="contact-platform">Email</div>
+          <div class="contact-handle">Pawanyandapalli9<br>@gmail.com</div>
+        </a>
+        <a href="tel:+17799777799" class="contact-card">
+          <div class="contact-platform">Phone</div>
+          <div class="contact-handle">(779) 977-7799</div>
+        </a>
+        <a href="https://www.linkedin.com/in/pawanyandapalli/" class="contact-card" target="_blank">
+          <div class="contact-platform">LinkedIn</div>
+          <div class="contact-handle">in/pawanyandapalli</div>
+        </a>
+        <a href="https://github.com/pawanyandapalli7" class="contact-card" target="_blank">
+          <div class="contact-platform">GitHub</div>
+          <div class="contact-handle">pawanyandapalli7</div>
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer-strip">
+      <span class="footer-copy">© 2026 Pawan Yandapalli</span>
+      <div class="footer-ticker"><div class="ticker-dot"></div>Open to opportunities</div>
+    </footer>
+  </main>
+</div>
+
+<script>
+// Custom cursor
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cursor.style.left=mx+'px';cursor.style.top=my+'px';
+});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,.project-card,.platform-card,.exp-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.width='12px';cursor.style.height='12px';ring.style.width='44px';ring.style.height='44px';ring.style.opacity='1';});
+  el.addEventListener('mouseleave',()=>{cursor.style.width='8px';cursor.style.height='8px';ring.style.width='32px';ring.style.height='32px';ring.style.opacity='.5';});
+});
+
+// Pipeline bg
+const bg=document.getElementById('pipelineBg');
+for(let i=0;i<8;i++){
+  const l=document.createElement('div');l.className='pipe-line';
+  l.style.cssText=`left:${20+i*52}px;height:${80+Math.random()*200}px;animation-duration:${4+Math.random()*6}s;animation-delay:${Math.random()*-8}s;`;
+  bg.appendChild(l);
+}
+
+// Skill bars
+const sObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.skill-fill').forEach(f=>{setTimeout(()=>{f.style.width=f.dataset.width+'%'},200)});sObs.unobserve(e.target);}});
+},{threshold:.3});
+document.querySelectorAll('.skill-group').forEach(g=>sObs.observe(g));
+
+// Active nav
+const navLinks=document.querySelectorAll('.nav-link[data-section]');
+const nObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){navLinks.forEach(l=>l.classList.remove('active'));const a=document.querySelector(`.nav-link[data-section="${e.target.id}"]`);if(a)a.classList.add('active');}});
+},{threshold:.25})
