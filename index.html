@@ -891,35 +891,80 @@ body::after{
 </div>
 
 <script>
-// Custom cursor
-const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{
-  mx=e.clientX;my=e.clientY;
-  cursor.style.left=mx+'px';cursor.style.top=my+'px';
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Custom cursor
+  const cursor=document.getElementById('cursor'),
+        ring=document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+
+  document.addEventListener('mousemove',e=>{
+    mx=e.clientX;my=e.clientY;
+    cursor.style.left=mx+'px';
+    cursor.style.top=my+'px';
+  });
+
+  (function loop(){
+    rx+=(mx-rx)*.12;
+    ry+=(my-ry)*.12;
+    ring.style.left=rx+'px';
+    ring.style.top=ry+'px';
+    requestAnimationFrame(loop)
+  })();
+
+  document.querySelectorAll('a,.project-card,.platform-card,.exp-card')
+    .forEach(el=>{
+      el.addEventListener('mouseenter',()=>{
+        cursor.style.width='12px';
+        cursor.style.height='12px';
+        ring.style.width='44px';
+        ring.style.height='44px';
+        ring.style.opacity='1';
+      });
+      el.addEventListener('mouseleave',()=>{
+        cursor.style.width='8px';
+        cursor.style.height='8px';
+        ring.style.width='32px';
+        ring.style.height='32px';
+        ring.style.opacity='.5';
+      });
+    });
+
+  // Pipeline bg
+  const bg=document.getElementById('pipelineBg');
+  for(let i=0;i<8;i++){
+    const l=document.createElement('div');
+    l.className='pipe-line';
+    l.style.cssText=`left:${20+i*52}px;height:${80+Math.random()*200}px;animation-duration:${4+Math.random()*6}s;animation-delay:${Math.random()*-8}s;`;
+    bg.appendChild(l);
+  }
+
+  // Skill bars
+  const sObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.querySelectorAll('.skill-fill')
+          .forEach(f=>{
+            setTimeout(()=>{f.style.width=f.dataset.width+'%'},200)
+          });
+        sObs.unobserve(e.target);
+      }
+    });
+  },{threshold:.3});
+  document.querySelectorAll('.skill-group').forEach(g=>sObs.observe(g));
+
+  // Active nav
+  const navLinks=document.querySelectorAll('.nav-link[data-section]');
+  const nObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        navLinks.forEach(l=>l.classList.remove('active'));
+        const a=document.querySelector(`.nav-link[data-section="${e.target.id}"]`);
+        if(a)a.classList.add('active');
+      }
+    });
+  },{threshold:.25});
+  document.querySelectorAll('section').forEach(s=>nObs.observe(s));
+
 });
-(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
-document.querySelectorAll('a,.project-card,.platform-card,.exp-card').forEach(el=>{
-  el.addEventListener('mouseenter',()=>{cursor.style.width='12px';cursor.style.height='12px';ring.style.width='44px';ring.style.height='44px';ring.style.opacity='1';});
-  el.addEventListener('mouseleave',()=>{cursor.style.width='8px';cursor.style.height='8px';ring.style.width='32px';ring.style.height='32px';ring.style.opacity='.5';});
-});
-
-// Pipeline bg
-const bg=document.getElementById('pipelineBg');
-for(let i=0;i<8;i++){
-  const l=document.createElement('div');l.className='pipe-line';
-  l.style.cssText=`left:${20+i*52}px;height:${80+Math.random()*200}px;animation-duration:${4+Math.random()*6}s;animation-delay:${Math.random()*-8}s;`;
-  bg.appendChild(l);
-}
-
-// Skill bars
-const sObs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.skill-fill').forEach(f=>{setTimeout(()=>{f.style.width=f.dataset.width+'%'},200)});sObs.unobserve(e.target);}});
-},{threshold:.3});
-document.querySelectorAll('.skill-group').forEach(g=>sObs.observe(g));
-
-// Active nav
-const navLinks=document.querySelectorAll('.nav-link[data-section]');
-const nObs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){navLinks.forEach(l=>l.classList.remove('active'));const a=document.querySelector(`.nav-link[data-section="${e.target.id}"]`);if(a)a.classList.add('active');}});
-},{threshold:.25})
+</script>
