@@ -25,13 +25,37 @@
   --muted:#555;--white:#f0ece4;
 }
 
+/* Light mode */
+html.light{
+  --bg:#f7f3ee;--bg2:#ece6db;
+  --border:#d4cab8;--border2:#b8aa94;
+  --amber:#d4870a;--amber-dim:#f0a020;
+  --teal:#00857a;--text:#1a1510;
+  --muted:#7a7060;--white:#0d0a06;
+}
+html.light body::after{opacity:.012;}
+html.light .sidebar::before{background:radial-gradient(circle,#d4870a14 0%,transparent 70%);}
+html.light .hero-body{color:#4a4035;}
+html.light .project-desc{color:#4a4035;}
+html.light .platform-desc{color:#4a4035;}
+html.light .exp-bullet span{color:#3a3025;}
+html.light .project-impact{background:#ece6db;border-color:#d4cab8;}
+html.light .impact-val{color:#00857a;}
+html.light .skill-name{color:#4a4035;}
+html.light .platform-highlight{color:#4a4035;}
+html.light .sidebar-bio{color:#5a5045;}
+html.light .metric-key{color:#6a6050;}
+html.light .contact-handle{color:var(--white);}
+html.light .exp-period,.exp-location{color:#7a7060;}
+html.light .footer-copy,.footer-ticker{color:#7a7060;}
+
 html{scroll-behavior:smooth}
 
 body{
   background:var(--bg);color:var(--text);
   font-family:'IBM Plex Mono',monospace;
   font-size:13px;line-height:1.6;
-  overflow-x:hidden;
+  overflow-x:hidden;cursor:none;
 }
 
 .cursor{
@@ -40,7 +64,7 @@ body{
   pointer-events:none;z-index:9999;
   transform:translate(-50%,-50%);
   transition:width .2s,height .2s;
-  opacity:.9;
+  mix-blend-mode:difference;
 }
 .cursor-ring{
   position:fixed;width:32px;height:32px;
@@ -75,7 +99,6 @@ body::after{
 .site-grid{
   display:grid;grid-template-columns:276px 1fr;
   min-height:100vh;position:relative;z-index:1;
-  cursor:none;
 }
 
 /* SIDEBAR */
@@ -190,7 +213,7 @@ body::after{
   margin-bottom:22px;max-width:500px;
 }
 .hero-headline em{font-style:italic;color:var(--amber);}
-.hero-body{font-size:11px;color:#777;line-height:1.9;max-width:460px;margin-bottom:32px;}
+.hero-body{font-size:11px;color:#999;line-height:1.9;max-width:460px;margin-bottom:32px;}
 
 .hero-metrics{
   display:grid;grid-template-columns:repeat(3,1fr);
@@ -353,8 +376,10 @@ body::after{
   position:relative;overflow:hidden;
 }
 .contact-card::after{content:'↗';position:absolute;top:14px;right:16px;font-size:13px;color:var(--border2);transition:color .2s,transform .2s;}
-.contact-card:hover{border-color:var(--amber);background:#0c0c0c;}
+.contact-card:hover{border-color:var(--amber);background:var(--bg2);}
 .contact-card:hover::after{color:var(--amber);transform:translate(2px,-2px);}
+html.light .contact-card:hover{background:var(--bg2);}
+html.light .contact-card{background:var(--bg);}
 .contact-platform{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:5px;}
 .contact-handle{font-family:'Instrument Serif',serif;font-size:1rem;color:var(--white);}
 
@@ -383,6 +408,232 @@ body::after{
 </head>
 <body>
 
+<!-- PIPELINE LOADER -->
+<div id="pipelineLoader">
+  <div class="pl-inner">
+    <div class="pl-name">PAWAN YANDAPALLI</div>
+    <div class="pl-role">Data Engineer</div>
+
+    <div class="pl-pipeline">
+      <div class="pl-stage" id="s0">
+        <span class="pl-stage-dot"></span>
+        <span class="pl-stage-label">INGEST</span>
+        <span class="pl-stage-status">—</span>
+      </div>
+      <div class="pl-arrow">→</div>
+      <div class="pl-stage" id="s1">
+        <span class="pl-stage-dot"></span>
+        <span class="pl-stage-label">EXTRACT</span>
+        <span class="pl-stage-status">—</span>
+      </div>
+      <div class="pl-arrow">→</div>
+      <div class="pl-stage" id="s2">
+        <span class="pl-stage-dot"></span>
+        <span class="pl-stage-label">TRANSFORM</span>
+        <span class="pl-stage-status">—</span>
+      </div>
+      <div class="pl-arrow">→</div>
+      <div class="pl-stage" id="s3">
+        <span class="pl-stage-dot"></span>
+        <span class="pl-stage-label">LOAD</span>
+        <span class="pl-stage-status">—</span>
+      </div>
+      <div class="pl-arrow">→</div>
+      <div class="pl-stage" id="s4">
+        <span class="pl-stage-dot"></span>
+        <span class="pl-stage-label">READY</span>
+        <span class="pl-stage-status">—</span>
+      </div>
+    </div>
+
+    <div class="pl-bar-wrap">
+      <div class="pl-bar-track">
+        <div class="pl-bar-fill" id="plBarFill"></div>
+      </div>
+      <div class="pl-percent" id="plPercent">0%</div>
+    </div>
+
+    <div class="pl-log" id="plLog">
+      <span class="pl-log-line">› Initializing portfolio runtime...</span>
+    </div>
+  </div>
+</div>
+
+<style>
+#pipelineLoader{
+  position:fixed;inset:0;z-index:99999;
+  background:#080808;
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .6s ease, transform .6s ease;
+}
+#pipelineLoader.hide{
+  opacity:0;pointer-events:none;transform:scale(1.02);
+}
+.pl-inner{
+  width:min(600px, 90vw);
+  font-family:'IBM Plex Mono',monospace;
+}
+.pl-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2rem,5vw,3.2rem);
+  color:#f0ece4;letter-spacing:.08em;
+  margin-bottom:4px;
+}
+.pl-role{
+  font-size:9px;letter-spacing:.3em;text-transform:uppercase;
+  color:#f5a623;margin-bottom:40px;
+}
+.pl-pipeline{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:28px;flex-wrap:wrap;
+}
+.pl-stage{
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  opacity:.25;transition:opacity .3s;
+}
+.pl-stage.active{opacity:1;}
+.pl-stage.done{opacity:.6;}
+.pl-stage-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:#2a2a2a;border:1px solid #333;
+  transition:background .3s,box-shadow .3s;
+}
+.pl-stage.active .pl-stage-dot{
+  background:#f5a623;
+  box-shadow:0 0 10px #f5a62366;
+  animation:stagePulse .6s infinite alternate;
+}
+.pl-stage.done .pl-stage-dot{
+  background:#00b4a6;
+  box-shadow:none;
+}
+@keyframes stagePulse{
+  from{box-shadow:0 0 6px #f5a62344;}
+  to{box-shadow:0 0 16px #f5a623aa;}
+}
+.pl-stage-label{
+  font-size:8px;letter-spacing:.2em;
+  text-transform:uppercase;color:#555;
+  transition:color .3s;
+}
+.pl-stage.active .pl-stage-label{color:#f5a623;}
+.pl-stage.done .pl-stage-label{color:#00b4a6;}
+.pl-stage-status{
+  font-size:8px;color:#333;letter-spacing:.1em;
+  transition:color .3s;
+}
+.pl-stage.active .pl-stage-status{color:#f5a62388;}
+.pl-stage.done .pl-stage-status{color:#00b4a677;}
+.pl-arrow{
+  font-size:12px;color:#2a2a2a;
+  margin-bottom:22px;transition:color .3s;
+  flex-shrink:0;
+}
+.pl-bar-wrap{
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:20px;
+}
+.pl-bar-track{
+  flex:1;height:2px;background:#1c1c1c;
+  position:relative;overflow:hidden;
+}
+.pl-bar-fill{
+  position:absolute;left:0;top:0;bottom:0;width:0%;
+  background:linear-gradient(90deg,#f5a623,#00b4a6);
+  transition:width .3s ease;
+}
+.pl-percent{
+  font-size:11px;color:#f5a623;
+  letter-spacing:.08em;width:36px;text-align:right;
+}
+.pl-log{
+  height:18px;overflow:hidden;
+}
+.pl-log-line{
+  display:block;font-size:10px;color:#444;
+  letter-spacing:.05em;line-height:1.8;
+  animation:fadeInLine .2s ease;
+}
+@keyframes fadeInLine{
+  from{opacity:0;transform:translateY(4px);}
+  to{opacity:1;transform:translateY(0);}
+}
+</style>
+
+<script>
+(function(){
+  const stages = [
+    { id:'s0', label:'INGEST',    log:'› Ingesting 5+ years of experience...', from:0,  to:15  },
+    { id:'s1', label:'EXTRACT',   log:'› Extracting 5+ years of data...', from:15, to:40  },
+    { id:'s2', label:'TRANSFORM', log:'› Transforming raw experience...', from:40, to:65  },
+    { id:'s3', label:'LOAD',      log:'› Loading portfolio into memory...', from:65, to:88 },
+    { id:'s4', label:'READY',     log:'› Pipeline complete. Welcome.', from:88, to:100 },
+  ];
+
+  const loader  = document.getElementById('pipelineLoader');
+  const barFill = document.getElementById('plBarFill');
+  const percent = document.getElementById('plPercent');
+  const logEl   = document.getElementById('plLog');
+
+  let currentPct = 0;
+
+  function setPercent(p){
+    currentPct = p;
+    barFill.style.width = p + '%';
+    percent.textContent = Math.floor(p) + '%';
+  }
+
+  function setLog(msg){
+    logEl.innerHTML = `<span class="pl-log-line">${msg}</span>`;
+  }
+
+  function animateTo(target, duration, cb){
+    const start = currentPct;
+    const startTime = performance.now();
+    function tick(now){
+      const t = Math.min((now - startTime) / duration, 1);
+      const eased = t < .5 ? 2*t*t : -1+(4-2*t)*t;
+      setPercent(start + (target - start) * eased);
+      if(t < 1) requestAnimationFrame(tick);
+      else { setPercent(target); if(cb) cb(); }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function runStage(i){
+    if(i >= stages.length){
+      // All done — dismiss
+      setTimeout(()=>{
+        loader.classList.add('hide');
+        setTimeout(()=>{ loader.style.display='none'; }, 700);
+      }, 500);
+      return;
+    }
+    const s = stages[i];
+    const el = document.getElementById(s.id);
+
+    // Activate current
+    el.classList.add('active');
+    el.querySelector('.pl-stage-status').textContent = 'RUNNING';
+    setLog(s.log);
+
+    // Activate arrows up to this stage
+    const arrows = document.querySelectorAll('.pl-arrow');
+    if(i > 0 && arrows[i-1]) arrows[i-1].style.color = '#00b4a6';
+
+    animateTo(s.to, 600 + Math.random() * 300, ()=>{
+      el.classList.remove('active');
+      el.classList.add('done');
+      el.querySelector('.pl-stage-status').textContent = 'DONE';
+      setTimeout(()=> runStage(i+1), 180);
+    });
+  }
+
+  // Small initial delay before starting
+  setTimeout(()=> runStage(0), 300);
+})();
+</script>
+
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 <div class="pipeline-bg" id="pipelineBg"></div>
@@ -401,7 +652,7 @@ body::after{
       <div class="avatar-initials">PY</div>
     </div>
 
-    <div class="sidebar-name">Pawan<br>Yandapalli</div>
+    <div class="sidebar-name">Pawan<br>Yanda<br>palli</div>
     <div class="sidebar-role">Data Engineer</div>
 
     <p class="sidebar-bio">
@@ -425,6 +676,7 @@ body::after{
 
     <nav class="sidebar-nav">
       <a href="#experience" class="nav-link" data-section="experience">Experience</a>
+      <a href="#dashboard"  class="nav-link" data-section="dashboard">Analytics</a>
       <a href="#work"       class="nav-link" data-section="work">Projects</a>
       <a href="#platform"   class="nav-link" data-section="platform">Platform</a>
       <a href="#skills"     class="nav-link" data-section="skills">Skills</a>
@@ -434,6 +686,7 @@ body::after{
     <div class="sidebar-links">
       <a href="https://github.com/pawanyandapalli7" class="ext-link" target="_blank">GitHub</a>
       <a href="https://www.linkedin.com/in/pawanyandapalli/" class="ext-link" target="_blank">LinkedIn</a>
+      <a href="Pawan_Yandapalli_Resume.pdf" download="Pawan_Yandapalli_Resume.pdf" class="ext-link resume-btn">↓ Resume</a>
     </div>
   </aside>
 
@@ -445,7 +698,7 @@ body::after{
       <div class="hero-eyebrow"><span></span> AWS · Snowflake · Spark · Kafka · dbt · Airflow</div>
       <h1 class="hero-headline">
         Raw data in.<br>
-        <em>Reliable decisions out.</em><br>— at any scale.
+        <em>Reliable decisions</em><br>out — at any scale.
       </h1>
       <p class="hero-body">
         Data Engineer with 5+ years designing cloud-native data platforms at Amazon and TouchWorld. I build the pipelines that power ML models, BI dashboards, and regulatory compliance — at any scale, in any domain.
@@ -558,6 +811,186 @@ body::after{
         </div>
       </div>
     </section>
+
+    <!-- ANALYTICS DASHBOARD -->
+    <section class="section" id="dashboard">
+      <div class="section-label">Career analytics</div>
+      <p style="font-size:11px;color:var(--muted);line-height:1.8;max-width:480px;margin-bottom:32px;">
+        5+ years of engineering work — visualized. Pipeline volumes, tech adoption, and domain coverage across every role.
+      </p>
+
+      <!-- KPI Row -->
+      <div class="dash-kpis">
+        <div class="kpi-card">
+          <div class="kpi-value" data-target="5">0</div>
+          <div class="kpi-label">Years Experience</div>
+          <div class="kpi-sub">Aug 2019 → Present</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" data-target="3">0</div>
+          <div class="kpi-label">Companies</div>
+          <div class="kpi-sub">GSPANN · Amazon · TouchWorld</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" data-target="10">0</div>
+          <div class="kpi-label">Portfolio Modules</div>
+          <div class="kpi-sub">Across 6 domains</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" data-target="12">0</div>
+          <div class="kpi-label">Core Technologies</div>
+          <div class="kpi-sub">AWS · Spark · Snowflake · dbt…</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="dash-charts">
+
+        <!-- Tech stack bar chart -->
+        <div class="dash-card dash-wide">
+          <div class="dash-card-header">
+            <span class="dash-card-title">Tech Stack Depth</span>
+            <span class="dash-card-badge">By proficiency</span>
+          </div>
+          <div class="bar-chart">
+            <div class="bar-row"><span class="bar-label">Python</span><div class="bar-track"><div class="bar-fill" data-w="96" style="background:var(--amber)"></div></div><span class="bar-val">Expert</span></div>
+            <div class="bar-row"><span class="bar-label">Apache Spark</span><div class="bar-track"><div class="bar-fill" data-w="93" style="background:var(--amber)"></div></div><span class="bar-val">Expert</span></div>
+            <div class="bar-row"><span class="bar-label">AWS (Glue/EMR/Redshift)</span><div class="bar-track"><div class="bar-fill" data-w="96" style="background:var(--amber)"></div></div><span class="bar-val">Expert</span></div>
+            <div class="bar-row"><span class="bar-label">Snowflake</span><div class="bar-track"><div class="bar-fill" data-w="90" style="background:var(--teal)"></div></div><span class="bar-val">Expert</span></div>
+            <div class="bar-row"><span class="bar-label">Airflow</span><div class="bar-track"><div class="bar-fill" data-w="87" style="background:var(--teal)"></div></div><span class="bar-val">Expert</span></div>
+            <div class="bar-row"><span class="bar-label">Terraform / IaC</span><div class="bar-track"><div class="bar-fill" data-w="80" style="background:var(--teal)"></div></div><span class="bar-val">Proficient</span></div>
+            <div class="bar-row"><span class="bar-label">dbt</span><div class="bar-track"><div class="bar-fill" data-w="80" style="background:#888"></div></div><span class="bar-val">Proficient</span></div>
+            <div class="bar-row"><span class="bar-label">Kafka / Databricks</span><div class="bar-track"><div class="bar-fill" data-w="72" style="background:#888"></div></div><span class="bar-val">Proficient</span></div>
+          </div>
+        </div>
+
+        <!-- Domain coverage donut -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <span class="dash-card-title">Domain Coverage</span>
+            <span class="dash-card-badge">By focus area</span>
+          </div>
+          <div class="donut-wrap">
+            <canvas id="donutChart" width="160" height="160"></canvas>
+            <div class="donut-center">
+              <div class="donut-num">6</div>
+              <div class="donut-lbl">Domains</div>
+            </div>
+          </div>
+          <div class="donut-legend">
+            <div class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>Cloud / AWS</div>
+            <div class="legend-item"><span class="legend-dot" style="background:var(--teal)"></span>Data Processing</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#e06c4a"></span>Healthcare / Gov</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#6a8fd8"></span>ML / Analytics</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#b07fd8"></span>DevOps / IaC</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#5ab870"></span>Observability</div>
+          </div>
+        </div>
+
+        <!-- Timeline sparkline -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <span class="dash-card-title">Career Timeline</span>
+            <span class="dash-card-badge">Role progression</span>
+          </div>
+          <div class="timeline-chart">
+            <div class="tl-item">
+              <div class="tl-dot" style="background:#555"></div>
+              <div class="tl-line"></div>
+              <div class="tl-content">
+                <div class="tl-company">GSPANN</div>
+                <div class="tl-role">Data Analyst</div>
+                <div class="tl-period">2019 — 2020</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="background:var(--amber)"></div>
+              <div class="tl-line"></div>
+              <div class="tl-content">
+                <div class="tl-company">Amazon</div>
+                <div class="tl-role">Data Engineer</div>
+                <div class="tl-period">2020 — 2023</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="background:var(--teal)"></div>
+              <div class="tl-line tl-line-active"></div>
+              <div class="tl-content">
+                <div class="tl-company">TouchWorld</div>
+                <div class="tl-role">Data Engineer</div>
+                <div class="tl-period">2025 — Present</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot tl-dot-pulse"></div>
+              <div class="tl-content">
+                <div class="tl-company" style="color:var(--amber)">Next Role</div>
+                <div class="tl-role">Open to opportunities</div>
+                <div class="tl-period">2026 →</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <style>
+    /* Dashboard */
+    .dash-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:20px;}
+    .kpi-card{background:var(--bg);padding:20px 22px;transition:background .2s;}
+    .kpi-card:hover{background:var(--bg2);}
+    .kpi-value{font-family:'Bebas Neue',sans-serif;font-size:2.6rem;color:var(--white);line-height:1;margin-bottom:4px;}
+    .kpi-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--amber);margin-bottom:4px;}
+    .kpi-sub{font-size:9px;color:var(--muted);}
+
+    .dash-charts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+    .dash-wide{grid-column:span 1;}
+    .dash-card{background:var(--bg2);border:1px solid var(--border);padding:20px 22px;}
+    .dash-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+    .dash-card-title{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--white);}
+    .dash-card-badge{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:2px 7px;border:1px solid var(--border2);}
+
+    /* Bar chart */
+    .bar-chart{display:flex;flex-direction:column;gap:10px;}
+    .bar-row{display:flex;align-items:center;gap:10px;}
+    .bar-label{font-size:9px;color:var(--muted);width:140px;flex-shrink:0;letter-spacing:.03em;}
+    .bar-track{flex:1;height:3px;background:var(--border2);position:relative;overflow:hidden;}
+    .bar-fill{position:absolute;left:0;top:0;bottom:0;width:0%;transition:width 1.4s cubic-bezier(.4,0,.2,1);}
+    .bar-val{font-size:9px;color:var(--muted);width:56px;text-align:right;flex-shrink:0;}
+
+    /* Donut */
+    .donut-wrap{position:relative;display:flex;justify-content:center;margin:8px 0 12px;}
+    .donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+    .donut-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--white);line-height:1;}
+    .donut-lbl{font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);}
+    .donut-legend{display:grid;grid-template-columns:1fr 1fr;gap:5px 10px;}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--muted);}
+    .legend-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+    /* Timeline */
+    .timeline-chart{display:flex;flex-direction:column;gap:0;}
+    .tl-item{display:flex;gap:12px;position:relative;}
+    .tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;z-index:1;}
+    .tl-dot-pulse{width:8px;height:8px;border-radius:50%;background:var(--amber);flex-shrink:0;margin-top:4px;animation:pulse 2s infinite;}
+    .tl-line{position:absolute;left:3.5px;top:12px;width:1px;height:calc(100% + 8px);background:var(--border2);}
+    .tl-line-active{background:linear-gradient(180deg,var(--teal),var(--border2));}
+    .tl-content{padding-bottom:20px;}
+    .tl-company{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--white);line-height:1;margin-bottom:2px;}
+    .tl-role{font-size:9px;color:var(--muted);letter-spacing:.06em;margin-bottom:2px;}
+    .tl-period{font-size:9px;color:var(--border2);letter-spacing:.08em;}
+
+    /* Light mode dashboard */
+    html.light .dash-card{background:var(--bg2);border-color:var(--border);}
+    html.light .kpi-card{background:var(--bg);}
+    html.light .bar-label{color:var(--muted);}
+    html.light .bar-val{color:var(--muted);}
+
+    @media(max-width:960px){
+      .dash-kpis{grid-template-columns:1fr 1fr;}
+      .dash-charts{grid-template-columns:1fr;}
+    }
+    </style>
 
     <!-- PORTFOLIO PROJECTS -->
     <section class="section" id="work">
@@ -862,12 +1295,25 @@ body::after{
     <!-- CONTACT -->
     <section class="section" id="contact">
       <div class="section-label">Get in touch</div>
+
+      <!-- Resume download — full width -->
+      <a href="Pawan_Yandapalli_Resume.pdf" download="Pawan_Yandapalli_Resume.pdf" class="resume-download-card">
+        <div class="resume-download-left">
+          <div class="resume-icon">⬇</div>
+          <div>
+            <div class="resume-download-title">Download Resume</div>
+            <div class="resume-download-sub">Pawan_Yandapalli_Resume.pdf · Data Engineer · 5+ years</div>
+          </div>
+        </div>
+        <div class="resume-download-cta">Download PDF →</div>
+      </a>
+
       <div class="contact-grid">
         <!-- Real email from resume -->
-        <a href="mailto:Pawanyandapalli9@gmail.com" class="contact-card">
+        <div class="contact-card" onclick="window.location='mailto:Pawanyandapalli9@gmail.com'" style="cursor:pointer;">
           <div class="contact-platform">Email</div>
           <div class="contact-handle">Pawanyandapalli9<br>@gmail.com</div>
-        </a>
+        </div>
         <a href="tel:+17799777799" class="contact-card">
           <div class="contact-platform">Phone</div>
           <div class="contact-handle">(779) 977-7799</div>
@@ -890,81 +1336,160 @@ body::after{
   </main>
 </div>
 
+<button id="themeToggle" aria-label="Toggle light/dark mode" title="Toggle theme">
+  <span class="theme-icon">☀️</span>
+</button>
+
+<style>
+/* Resume download */
+.resume-btn{border-color:var(--amber) !important;color:var(--amber) !important;}
+.resume-btn:hover{background:var(--amber-dim);color:var(--white) !important;}
+.resume-download-card{
+  display:flex;align-items:center;justify-content:space-between;
+  border:1px solid var(--amber);padding:20px 26px;
+  margin-bottom:16px;text-decoration:none;
+  background:var(--bg);transition:background .2s;
+  position:relative;overflow:hidden;
+}
+.resume-download-card::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#f5a62308,transparent);pointer-events:none;}
+.resume-download-card:hover{background:var(--bg2);}
+.resume-download-left{display:flex;align-items:center;gap:16px;}
+.resume-icon{font-size:1.4rem;color:var(--amber);}
+.resume-download-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--white);line-height:1;margin-bottom:4px;letter-spacing:.03em;}
+.resume-download-sub{font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;}
+.resume-download-cta{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--amber);transition:transform .2s;}
+.resume-download-card:hover .resume-download-cta{transform:translateX(4px);}
+html.light .resume-download-title{color:var(--white);}
+
+#themeToggle{
+  z-index:9990;
+  width:44px;height:44px;
+  border-radius:50%;
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  cursor:none;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+  transition:border-color .2s,background .2s,transform .2s,box-shadow .2s;
+  box-shadow:0 2px 12px rgba(0,0,0,.4);
+}
+#themeToggle:hover{
+  border-color:var(--amber);
+  transform:scale(1.1);
+  box-shadow:0 4px 20px rgba(245,166,35,.2);
+}
+html.light #themeToggle{
+  background:var(--bg2);
+  box-shadow:0 2px 12px rgba(0,0,0,.15);
+}
+</style>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-
-  // Custom cursor
-  const cursor=document.getElementById('cursor'),
-        ring=document.getElementById('cursorRing');
-  let mx=0,my=0,rx=0,ry=0;
-
-  document.addEventListener('mousemove',e=>{
-    mx=e.clientX;my=e.clientY;
-    cursor.style.left=mx+'px';
-    cursor.style.top=my+'px';
-  });
-
-  (function loop(){
-    rx+=(mx-rx)*.12;
-    ry+=(my-ry)*.12;
-    ring.style.left=rx+'px';
-    ring.style.top=ry+'px';
-    requestAnimationFrame(loop)
-  })();
-
-  document.querySelectorAll('a,.project-card,.platform-card,.exp-card')
-    .forEach(el=>{
-      el.addEventListener('mouseenter',()=>{
-        cursor.style.width='12px';
-        cursor.style.height='12px';
-        ring.style.width='44px';
-        ring.style.height='44px';
-        ring.style.opacity='1';
-      });
-      el.addEventListener('mouseleave',()=>{
-        cursor.style.width='8px';
-        cursor.style.height='8px';
-        ring.style.width='32px';
-        ring.style.height='32px';
-        ring.style.opacity='.5';
-      });
-    });
-
-  // Pipeline bg
-  const bg=document.getElementById('pipelineBg');
-  for(let i=0;i<8;i++){
-    const l=document.createElement('div');
-    l.className='pipe-line';
-    l.style.cssText=`left:${20+i*52}px;height:${80+Math.random()*200}px;animation-duration:${4+Math.random()*6}s;animation-delay:${Math.random()*-8}s;`;
-    bg.appendChild(l);
-  }
-
-  // Skill bars
-  const sObs=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){
-        e.target.querySelectorAll('.skill-fill')
-          .forEach(f=>{
-            setTimeout(()=>{f.style.width=f.dataset.width+'%'},200)
-          });
-        sObs.unobserve(e.target);
-      }
-    });
-  },{threshold:.3});
-  document.querySelectorAll('.skill-group').forEach(g=>sObs.observe(g));
-
-  // Active nav
-  const navLinks=document.querySelectorAll('.nav-link[data-section]');
-  const nObs=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){
-        navLinks.forEach(l=>l.classList.remove('active'));
-        const a=document.querySelector(`.nav-link[data-section="${e.target.id}"]`);
-        if(a)a.classList.add('active');
-      }
-    });
-  },{threshold:.25});
-  document.querySelectorAll('section').forEach(s=>nObs.observe(s));
-
+// Theme toggle
+const themeBtn=document.getElementById('themeToggle');
+const themeIcon=themeBtn.querySelector('.theme-icon');
+const savedTheme=localStorage.getItem('theme')||'dark';
+if(savedTheme==='light'){document.documentElement.classList.add('light');themeIcon.textContent='🌙';}
+themeBtn.addEventListener('click',()=>{
+  const isLight=document.documentElement.classList.toggle('light');
+  themeIcon.textContent=isLight?'🌙':'☀️';
+  localStorage.setItem('theme',isLight?'light':'dark');
 });
+
+// Custom cursor
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cursor.style.left=mx+'px';cursor.style.top=my+'px';
+});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,.project-card,.platform-card,.exp-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.width='12px';cursor.style.height='12px';ring.style.width='44px';ring.style.height='44px';ring.style.opacity='1';});
+  el.addEventListener('mouseleave',()=>{cursor.style.width='8px';cursor.style.height='8px';ring.style.width='32px';ring.style.height='32px';ring.style.opacity='.5';});
+});
+
+// Pipeline bg
+const bg=document.getElementById('pipelineBg');
+for(let i=0;i<8;i++){
+  const l=document.createElement('div');l.className='pipe-line';
+  l.style.cssText=`left:${20+i*52}px;height:${80+Math.random()*200}px;animation-duration:${4+Math.random()*6}s;animation-delay:${Math.random()*-8}s;`;
+  bg.appendChild(l);
+}
+
+// Skill bars
+const sObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.skill-fill').forEach(f=>{setTimeout(()=>{f.style.width=f.dataset.width+'%'},200)});sObs.unobserve(e.target);}});
+},{threshold:.3});
+document.querySelectorAll('.skill-group').forEach(g=>sObs.observe(g));
+
+// Dashboard - KPI counters
+const kpiObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.querySelectorAll('.kpi-value').forEach(el => {
+        const target = parseInt(el.dataset.target);
+        let current = 0;
+        const step = target / 40;
+        const timer = setInterval(() => {
+          current = Math.min(current + step, target);
+          el.textContent = Math.floor(current) + (target >= 10 ? '' : '+');
+          if(current >= target) { el.textContent = target + (el.dataset.target == '5' ? '+' : ''); clearInterval(timer); }
+        }, 30);
+      });
+      // Animate bar fills
+      e.target.querySelectorAll('.bar-fill').forEach(f => {
+        setTimeout(() => { f.style.width = f.dataset.w + '%'; }, 300);
+      });
+      kpiObs.unobserve(e.target);
+    }
+  });
+}, {threshold: 0.3});
+const dashSection = document.getElementById('dashboard');
+if(dashSection) kpiObs.observe(dashSection);
+
+// Donut chart
+const donutCanvas = document.getElementById('donutChart');
+if(donutCanvas) {
+  const ctx = donutCanvas.getContext('2d');
+  const data = [30, 25, 18, 12, 10, 5];
+  const colors = ['#f5a623','#00b4a6','#e06c4a','#6a8fd8','#b07fd8','#5ab870'];
+  const total = data.reduce((a,b) => a+b, 0);
+  let startAngle = -Math.PI / 2;
+  const cx = 80, cy = 80, outerR = 70, innerR = 48;
+  let animProgress = 0;
+  function drawDonut(progress) {
+    ctx.clearRect(0, 0, 160, 160);
+    let sa = -Math.PI / 2;
+    data.forEach((val, i) => {
+      const slice = (val / total) * Math.PI * 2 * progress;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(sa) * innerR, cy + Math.sin(sa) * innerR);
+      ctx.arc(cx, cy, outerR, sa, sa + slice);
+      ctx.arc(cx, cy, innerR, sa + slice, sa, true);
+      ctx.closePath();
+      ctx.fillStyle = colors[i];
+      ctx.fill();
+      sa += slice;
+    });
+  }
+  function animateDonut() {
+    animProgress += 0.03;
+    if(animProgress > 1) animProgress = 1;
+    drawDonut(animProgress);
+    if(animProgress < 1) requestAnimationFrame(animateDonut);
+  }
+  const donutObs = new IntersectionObserver(entries => {
+    if(entries[0].isIntersecting) { animateDonut(); donutObs.disconnect(); }
+  }, {threshold: 0.3});
+  donutObs.observe(donutCanvas);
+}
+
+// Active nav
+const navLinks=document.querySelectorAll('.nav-link[data-section]');
+const nObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){navLinks.forEach(l=>l.classList.remove('active'));const a=document.querySelector(`.nav-link[data-section="${e.target.id}"]`);if(a)a.classList.add('active');}});
+},{threshold:.25});
+['experience','dashboard','work','platform','skills','contact'].forEach(id=>{const el=document.getElementById(id);if(el)nObs.observe(el);});
 </script>
+</body>
+</html>
