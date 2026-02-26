@@ -656,7 +656,7 @@ html.light .contact-card{background:var(--bg);}
     <div class="sidebar-role">Data Engineer</div>
 
     <p class="sidebar-bio">
-      5+ years building data platforms that power fraud detection, clinical research, and ML at scale — at Amazon and beyond.
+      5+ years building data platforms that power fraud detection, clinical research, and ML at scale — at Amazon and beyond. Including a personal health data pipeline processing real-time Apple Watch biometrics — built end-to-end as a live portfolio system.
     </p>
 
     <div class="sidebar-stats">
@@ -669,7 +669,7 @@ html.light .contact-card{background:var(--bg);}
         <div class="stat-label">Companies</div>
       </div>
       <div class="sidebar-stat">
-        <div class="stat-num">10</div>
+        <div class="stat-num">11</div>
         <div class="stat-label">Portfolio modules</div>
       </div>
     </div>
@@ -832,7 +832,7 @@ html.light .contact-card{background:var(--bg);}
           <div class="kpi-sub">GSPANN · Amazon · TouchWorld</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-value" data-target="10">0</div>
+          <div class="kpi-value" data-target="11">0</div>
           <div class="kpi-label">Portfolio Modules</div>
           <div class="kpi-sub">Across 6 domains</div>
         </div>
@@ -1128,7 +1128,33 @@ html.light .contact-card{background:var(--bg);}
         </div>
       </div>
 
-      <div class="modules-strip">
+      <!-- 11 -->
+      <div class="project-card">
+        <div class="project-inner">
+          <div class="project-top">
+            <div class="project-index">11</div>
+            <div class="project-stack">
+              <span class="stack-tag">Node.js</span><span class="stack-tag">Express</span>
+              <span class="stack-tag">Apple HealthKit</span><span class="stack-tag">Vanilla JS</span>
+              <span class="stack-tag">GitHub API</span><span class="stack-tag">PWA</span>
+            </div>
+          </div>
+          <div class="project-problem">Problem — No unified view of personal health data — metrics scattered across Apple Health, manual logs, and no pipeline observability</div>
+          <h2 class="project-title">Health OS — Personal Health Data Pipeline</h2>
+          <p class="project-desc">End-to-end personal health data system. Apple Watch → Health Auto Export → Node.js backend → observable dashboard. Built to demonstrate idempotent ingestion, raw/clean/derived data separation, SLA monitoring, anomaly detection, and metric explainability on real biometric data.</p>
+          <div class="project-impact">
+            <div class="impact-item"><div class="impact-val">Live</div><div class="impact-lbl">Pipeline</div></div>
+            <div class="impact-item"><div class="impact-val">Real</div><div class="impact-lbl">Data</div></div>
+            <div class="impact-item"><div class="impact-val">Observable</div><div class="impact-lbl">System</div></div>
+          </div>
+          <div class="health-badges">
+            <span class="health-badge">✓ Idempotent ingestion — date as primary key, safe to re-run</span>
+            <span class="health-badge">✓ Raw / Clean / Derived — 3-layer architecture</span>
+            <span class="health-badge">✓ SLA monitoring + anomaly detection</span>
+          </div>
+          <a href="https://pawanyandapalli7.github.io/health-tracker/" class="project-link" target="_blank">View Live →</a>
+        </div>
+      </div>
         <span class="strip-label">Also in repo →</span>
         <div class="strip-items">
           <a href="https://github.com/pawanyandapalli7/data-engineer-portfolio/tree/main/01_sql/advanced_analytics" class="strip-item" target="_blank">
@@ -1341,6 +1367,10 @@ html.light .contact-card{background:var(--bg);}
 </button>
 
 <style>
+.health-badges{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.health-badge{font-size:10px;color:#5a5a5a;padding:5px 10px;border:1px solid var(--border2);letter-spacing:.03em;}
+.project-card:hover .health-badge{border-color:var(--amber-dim);color:#777;}
+
 /* Resume download */
 .resume-btn{border-color:var(--amber) !important;color:var(--amber) !important;}
 .resume-btn:hover{background:var(--amber-dim);color:var(--white) !important;}
